@@ -149,7 +149,7 @@ body {
 
 .hero-section {
     background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                url('../images/hero-bg.jpg') center/cover;
+                url('hero-bg.jpg') center/cover;
 
     color: white;
     padding: 4rem 2rem;
@@ -695,4 +695,5 @@ body {
     .nav-tab {
         min-width: auto;
     }
+
 }
