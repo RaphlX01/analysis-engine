@@ -172,6 +172,38 @@
         </section>
     </div>
 
+    <!-- Modal untuk Edit Detail -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Detail Mata Kuliah</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Nilai (0-100)</label>
+                    <input type="number" class="form-input" id="editGrade" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kehadiran (%)</label>
+                    <input type="number" class="form-input" id="editAttendance" min="0" max="100">
+                </div>
+                <div class="checkbox-group modal-checkbox">
+                    <div class="checkbox" id="editAssignment"></div>
+                    <span class="detail-label">Tugas Selesai</span>
+                </div>
+                <div class="checkbox-group modal-checkbox">
+                    <div class="checkbox" id="editProject"></div>
+                    <span class="detail-label">Siap Project Akhir</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn cancel-btn" id="modalCancel">Batal</button>
+                <button class="action-btn analyze-btn" id="modalSave">Simpan</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="footer-content">
             <h3 class="footer-title">Academic Analysis Pro</h3>
