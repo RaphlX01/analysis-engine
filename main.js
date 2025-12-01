@@ -60,6 +60,7 @@ class AcademicAnalysisApp {
         ];
         this.isDarkMode = false;
         this.currentTheme = 'blue';
+        this.currentEditIndex = null;
         this.initialize();
     }
 
@@ -99,6 +100,35 @@ class AcademicAnalysisApp {
 
         document.getElementById('resetBtn').addEventListener('click', () => {
             this.resetData();
+        });
+
+        // Modal event listeners
+        document.getElementById('modalClose').addEventListener('click', () => {
+            this.closeModal();
+        });
+
+        document.getElementById('modalCancel').addEventListener('click', () => {
+            this.closeModal();
+        });
+
+        document.getElementById('modalSave').addEventListener('click', () => {
+            this.saveModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', (e) => {
+            if (e.target.id === 'editModal') {
+                this.closeModal();
+            }
+        });
+
+        // Checkbox event listeners for modal
+        document.getElementById('editAssignment').addEventListener('click', () => {
+            this.toggleModalCheckbox('editAssignment');
+        });
+
+        document.getElementById('editProject').addEventListener('click', () => {
+            this.toggleModalCheckbox('editProject');
         });
     }
 
@@ -152,21 +182,28 @@ class AcademicAnalysisApp {
                         <button class="course-btn delete-btn" data-index="${index}">🗑️</button>
                     </div>
                 </div>
-                <input type="number" class="grade-input" value="${course.grade}" 
-                       min="0" max="100" data-index="${index}">
+                <div class="grade-display">
+                    <span class="grade-label">Nilai:</span>
+                    <span class="grade-value">${course.grade}</span>
+                </div>
                 <div class="course-details">
-                    <div class="detail-row">
-                        <span class="detail-label">Kehadiran:</span>
-                        <span class="detail-value">${course.attendance}%</span>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox ${course.assignmentCompleted ? 'checked' : ''}" data-index="${index}" data-type="assignment"></div>
-                        <span class="detail-label">Tugas Selesai</span>
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox ${course.finalProjectReady ? 'checked' : ''}" data-index="${index}" data-type="project"></div>
-                        <span class="detail-label">Siap Project Akhir</span>
-                    </div>
+                    <table class="attendance-table">
+                        <tr>
+                            <td><strong>Kehadiran:</strong></td>
+                            <td class="attendance-value">${course.attendance}%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tugas:</strong></td>
+                            <td class="attendance-value">${course.assignmentCompleted ? '✓ Selesai' : '✗ Belum'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Project:</strong></td>
+                            <td class="attendance-value">${course.finalProjectReady ? '✓ Siap' : '✗ Belum'}</td>
+                        </tr>
+                    </table>
+                    <button class="edit-details-btn" data-index="${index}">
+                        ✏️ Edit Detail
+                    </button>
                 </div>
             `;
             coursesGrid.appendChild(courseCard);
@@ -190,20 +227,67 @@ class AcademicAnalysisApp {
             });
         });
 
-        document.querySelectorAll('.grade-input').forEach(input => {
-            input.addEventListener('change', (e) => {
+        document.querySelectorAll('.edit-details-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 const index = parseInt(e.target.dataset.index);
-                this.updateGrade(index, e.target.value);
+                this.openEditModal(index);
             });
         });
+    }
 
-        document.querySelectorAll('.checkbox').forEach(checkbox => {
-            checkbox.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.index);
-                const type = e.target.dataset.type;
-                this.toggleCheckbox(index, type);
-            });
-        });
+    openEditModal(index) {
+        this.currentEditIndex = index;
+        const course = this.courses[index];
+        
+        document.getElementById('editGrade').value = course.grade;
+        document.getElementById('editAttendance').value = course.attendance;
+        
+        // Set checkboxes
+        const assignmentCheckbox = document.getElementById('editAssignment');
+        const projectCheckbox = document.getElementById('editProject');
+        
+        assignmentCheckbox.className = course.assignmentCompleted ? 'checkbox checked' : 'checkbox';
+        projectCheckbox.className = course.finalProjectReady ? 'checkbox checked' : 'checkbox';
+        
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    closeModal() {
+        document.getElementById('editModal').classList.remove('active');
+        this.currentEditIndex = null;
+    }
+
+    toggleModalCheckbox(checkboxId) {
+        const checkbox = document.getElementById(checkboxId);
+        checkbox.classList.toggle('checked');
+    }
+
+    saveModal() {
+        if (this.currentEditIndex === null) return;
+        
+        const grade = parseInt(document.getElementById('editGrade').value) || 0;
+        const attendance = parseInt(document.getElementById('editAttendance').value) || 0;
+        const assignmentCompleted = document.getElementById('editAssignment').classList.contains('checked');
+        const finalProjectReady = document.getElementById('editProject').classList.contains('checked');
+        
+        // Validasi
+        if (grade < 0 || grade > 100) {
+            alert('Nilai harus antara 0-100');
+            return;
+        }
+        
+        if (attendance < 0 || attendance > 100) {
+            alert('Kehadiran harus antara 0-100%');
+            return;
+        }
+        
+        this.courses[this.currentEditIndex].grade = grade;
+        this.courses[this.currentEditIndex].attendance = attendance;
+        this.courses[this.currentEditIndex].assignmentCompleted = assignmentCompleted;
+        this.courses[this.currentEditIndex].finalProjectReady = finalProjectReady;
+        
+        this.renderCourses();
+        this.closeModal();
     }
 
     addCourse() {
@@ -235,19 +319,6 @@ class AcademicAnalysisApp {
         }
     }
 
-    updateGrade(index, value) {
-        this.courses[index].grade = parseInt(value) || 0;
-    }
-
-    toggleCheckbox(index, type) {
-        if (type === 'assignment') {
-            this.courses[index].assignmentCompleted = !this.courses[index].assignmentCompleted;
-        } else if (type === 'project') {
-            this.courses[index].finalProjectReady = !this.courses[index].finalProjectReady;
-        }
-        this.renderCourses();
-    }
-
     analyzeGrades() {
         const studentName = document.getElementById('studentName').value;
         const studentNIM = document.getElementById('studentNIM').value;
@@ -261,11 +332,15 @@ class AcademicAnalysisApp {
         const total = this.courses.reduce((sum, course) => sum + course.grade, 0);
         const gpa = (total / this.courses.length / 25).toFixed(2);
 
+        const allCoursesPassed = this.courses.every(course => 
+            course.grade >= 60 && course.attendance >= 75 && course.assignmentCompleted
+        );
+        
         const failedCourses = this.courses.filter(course => 
             course.grade < 60 || course.attendance < 75 || !course.assignmentCompleted
         ).length;
         
-        const graduationStatus = failedCourses === 0 ? 'Lulus' : 'Tidak Lulus';
+        const graduationStatus = allCoursesPassed ? 'Lulus' : 'Tidak Lulus';
 
         const recommendations = this.getRecommendations(parseFloat(gpa));
 
