@@ -382,21 +382,25 @@ body {
     background: rgba(239, 68, 68, 0.1);
 }
 
-.grade-input {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 1.2rem;
-    font-weight: 600;
+.grade-display {
     text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
     background: var(--surface);
-    color: var(--text-primary);
+    border-radius: 12px;
+    border: 2px solid var(--border);
 }
 
-.grade-input:focus {
-    outline: none;
-    border-color: var(--primary);
+.grade-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+}
+
+.grade-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
 }
 
 .course-details {
@@ -405,69 +409,40 @@ body {
     border-top: 1px solid var(--border);
 }
 
-.detail-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.75rem;
-}
-
-.detail-label {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-.detail-value {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-/* ATTENDANCE SLIDER STYLES */
-.attendance-control {
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 1rem;
 }
 
-.attendance-slider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 0.5rem;
-}
-
-.attendance-input {
-    flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--border);
-    outline: none;
-    -webkit-appearance: none;
-}
-
-.attendance-input::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--primary);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: var(--shadow);
-}
-
-.attendance-input::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--primary);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: var(--shadow);
+.attendance-table td {
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
 }
 
 .attendance-value {
     font-weight: 600;
     color: var(--primary);
-    min-width: 40px;
-    text-align: right;
+    text-align: center;
+}
+
+.edit-details-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.edit-details-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
 .checkbox-group {
@@ -727,6 +702,90 @@ body {
     border-radius: 50%;
 }
 
+/* MODAL STYLES */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--background);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    color: var(--error);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    justify-content: flex-end;
+}
+
+.modal-checkbox {
+    margin: 1rem 0;
+}
+
+.cancel-btn {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+}
+
+.cancel-btn:hover {
+    background: var(--background);
+    border-color: var(--error);
+    color: var(--error);
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
@@ -742,5 +801,14 @@ body {
     
     .nav-tab {
         min-width: auto;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
     }
 }
